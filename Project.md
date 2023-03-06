@@ -1,5 +1,5 @@
 
-In previous project [Implementing Web Solution (https://github.com/Micah-Shallom/Implementing-Wordpress-Web-Solution)] I implemented a WordPress based solution that is ready to be filled with content and can be used as a full fledged website or blog. Moving further I will add some more value to my solution so that a member of a DevOps team could utilize.
+In previous project [Implementing Web Solution] (https://github.com/Omolade11/Web-Solution-using-WordPress-and-MySQL)  I implemented a WordPress based solution that is ready to be filled with content and can be used as a full fledged website or blog. Moving further I will add some more value to my solution so that a member of a DevOps team could utilize.
 
 In this project, we will implement a solution that consists of following components:
 1. Infrastructure: AWS
