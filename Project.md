@@ -19,3 +19,8 @@ This project consists of the following servers:
 1. Web server(RHEL)
 2. Database server(Ubuntu + MySQL)
 3. Storage/File server(RHEL + NFS server)
+
+## Step 1 – Prepare NFS Server
+1. Spin up a new EC2 instance with RHEL Linux 8 Operating System.
+2. Launch the instance and attach 3 volumes to it.
+
