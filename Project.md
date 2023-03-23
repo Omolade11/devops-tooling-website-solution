@@ -23,4 +23,4 @@ This project consists of the following servers:
 ## Step 1 – Prepare NFS Server
 1. Spin up a new EC2 instance with RHEL Linux 8 Operating System.
 2. Launch the instance and attach 3 volumes to it.
-
+![]()
