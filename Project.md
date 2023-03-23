@@ -25,4 +25,5 @@ This project consists of the following servers:
 2. Launch the instance and attach 3 volumes to it.
 ![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-23%20at%2008.37.03.png)
 ![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-23%20at%2014.36.13.png)
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-23%20at%2014.49.53.png)
 
