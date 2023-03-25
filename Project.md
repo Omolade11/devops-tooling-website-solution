@@ -112,7 +112,7 @@ sudo mount -a
 sudo systemctl daemon-reload
 ```
 17. Verify our setup by running `df -h`, output must look like this:
-
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-25%20at%2012.50.35.png)
 
 
 
