@@ -94,13 +94,26 @@ sudo mount /dev/webdata-vg/opt-lv /mnt/opt
 
 `sudo blkid` to get the UUID, edit the fstab file accordingly
 
+Update /etc/fstab in this format using your own UUID and remember to remove the leading and ending quotes.
+
+
 `sudo vi /etc/fstab`
 
-Verify the mount points
+```
+UUID=06291ab3-bbfe-4461-9b55-b48979c5a42d /mnt/logs  xfs defaults 0 0
+UUID=9f26a746-20b9-49fd-9363-0d0b5001a16b /mnt/apps  xfs defaults 0 0
+UUID=3aa4c9e9-802d-49c1-af17-844200c9b287 /mnt/opt   xfs defaults 0 0
 
-sudo mount -a  sudo systemctl daemon-reload
+```
+16. Verify the mount points
 
-Update /etc/fstab in this format using your own UUID and remember to remove the leading and ending quotes.
+```
+sudo mount -a  
+sudo systemctl daemon-reload
+```
+17. Verify our setup by running `df -h`, output must look like this:
+
+
 
 
 
