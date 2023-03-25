@@ -35,3 +35,73 @@ We will use gdisk utility to create a single partition on each of the 3 disks:
 
 `sudo gdisk /dev/xvdh` type n then hit enter 5 times type p hit enter once type w hit enter once type y hit enter once
 
+4. We will verify the newly configured partition on each of the 3 disks by using `lsblk` utility
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-25%20at%2009.32.09.png)
+5. We will install lvm2 package using `sudo yum install lvm2`
+
+6. To check for available partitions, we will run `sudo lvmdiskscan`
+
+7. Use pvcreate utility to mark each of 3 disks as physical volumes (PVs) to be used by LVM:
+```
+sudo pvcreate /dev/xvdf1
+sudo pvcreate /dev/xvdg1
+sudo pvcreate /dev/xvdh1
+```
+8. We will verify that our Physical volume has been created successfully by running:
+`sudo pvs`
+
+9. We will use vgcreate utility to add all 3 PVs to a volume group (VG). Name the VG webdata-vg or anything we want :
+`sudo vgcreate webdata-vg /dev/xvdh1 /dev/xvdg1 /dev/xvdf1`
+
+10. Verify that our VG has been created successfully by running:
+`sudo vgs`
+
+11. We will use lvcreate utility to create 3 logical volumes. apps-lv, logs-lv and opt-lv:
+```
+sudo lvcreate -n apps-lv -L 7G webdata-vg
+sudo lvcreate -n logs-lv -L 7G webdata-vg
+sudo lvcreate -n opt-lv -L 7G webdata-vg
+```
+Verify that our Logical Volume has been created successfully by running:
+`sudo lvs`
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-25%20at%2011.28.03.png)
+
+12. Verify the entire setup by running: 
+
+`sudo vgdisplay -v #view complete setup - VG, PV, and LV`
+`sudo lsblk`
+
+13. Instead of formatting the disks as ext4, we will have to format them as xfs
+```
+sudo mkfs -t xfs /dev/webdata-vg/apps-lv
+sudo mkfs -t xfs /dev/webdata-vg/logs-lv
+sudo mkfs -t xfs /dev/webdata-vg/opt-lv
+```
+
+14. Create mount points on /mnt directory for the logical volumes as follow: Mount lv-apps on /mnt/apps – To be used by webservers Mount lv-logs on /mnt/logs – To be used by webserver logs Mount lv-opt on /mnt/opt – To be used by Jenkins server in Project 8
+```
+sudo mkdir -p /mnt/apps
+sudo mkdir -p /mnt/logs
+sudo mkdir -p /mnt/opt
+```
+```
+sudo mount /dev/webdata-vg/apps-lv /mnt/apps
+sudo mount /dev/webdata-vg/logs-lv /mnt/logs
+sudo mount /dev/webdata-vg/opt-lv /mnt/opt
+```
+15. Once mount is completed run:
+
+`sudo blkid` to get the UUID, edit the fstab file accordingly
+
+`sudo vi /etc/fstab`
+
+Verify the mount points
+
+sudo mount -a  sudo systemctl daemon-reload
+
+Update /etc/fstab in this format using your own UUID and remember to remove the leading and ending quotes.
+
+
+
+
