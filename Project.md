@@ -26,4 +26,12 @@ This project consists of the following servers:
 ![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-23%20at%2008.37.03.png)
 ![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-23%20at%2014.36.13.png)
 ![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-23%20at%2014.49.53.png)
+3. ssh to the instance and let's begin to configure our nfs server. To verify, we will run `sudo lsblk`.
+We will use gdisk utility to create a single partition on each of the 3 disks:
+
+`sudo gdisk /dev/xvdf` type n then hit enter 5 times type p hit enter once type w hit enter once type y hit enter once
+
+`sudo gdisk /dev/xvdg` type n then hit enter 5 times type p hit enter once type w hit enter once type y hit enter once
+
+`sudo gdisk /dev/xvdh` type n then hit enter 5 times type p hit enter once type w hit enter once type y hit enter once
 
