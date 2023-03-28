@@ -229,7 +229,44 @@ sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/ww
 
 ```
 4. We will verify that NFS was mounted successfully by running `df -h`. Make sure that the changes will persist on Web Server after reboot:
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2008.26.26.png)
+
+`sudo vi /etc/fstab`
+
+add following line :
+
+``` <NFS-Server-Private-IP-Address>:/mnt/apps /var/www nfs defaults 0 0 ```
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2008.43.42.png)
+
+5. We will install [Remi’s repository](http://www.servermom.org/how-to-enable-remi-repo-on-centos-7-6-and-5/2790/), Apache and PHP
+
+```
+sudo yum install httpd -y
+ 
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+ 
+sudo dnf install dnf-utils http://rpms.remirepo.net/enterprise/remi-release-8.rpm
+ 
+sudo dnf module reset php
+ 
+sudo dnf module enable php:remi-7.4
+ 
+sudo dnf install php php-opcache php-gd php-curl php-mysqlnd
+ 
+sudo systemctl start php-fpm
+ 
+sudo systemctl enable php-fpm
+ 
+sudo setsebool -P httpd_execmem 1
+
+```
+6. We will verify that Apache files and directories are available on the Web Server in /var/www and also on the NFS server in /mnt/apps. If we see the same files – it means NFS is mounted correctly. 
+``` ls /var/www ```
+
 ![]()
+
+
 
 
 
