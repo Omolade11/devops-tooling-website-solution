@@ -262,10 +262,47 @@ sudo setsebool -P httpd_execmem 1
 
 ```
 6. We will verify that Apache files and directories are available on the Web Server in /var/www and also on the NFS server in /mnt/apps. If we see the same files – it means NFS is mounted correctly. 
+
 ``` ls /var/www ```
 
-![]()
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2008.57.03.png)
 
+``` ls /mnt/apps ```
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2009.10.28.png)
+
+7. Locate the log folder for Apache on the Web Server and mount it to NFS server’s export for logs. Make sure the mount point will persist after reboot.
+
+
+``` sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd ```
+
+Afterward, run `sudo vi /etc/fstab`
+
+add the following line :
+
+`<NFS-Server-Private-IP-Address>:/mnt/logs /var/log/httpd nfs defaults 0 0 `
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2009.42.36.png)
+
+8. Fork the tooling source code from Darey.io Github Account to our Github account.
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2009.48.46.png)
+
+9. Deploy the tooling website’s code to the Webserver. Ensure that the html folder from the repository is deployed to /var/www/html.
+``` sudo yum install git -y ```
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2010.26.21.png)
+
+
+Note 1: Do not forget to open TCP port 80 on the Web Server.
+
+Note 2: If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
+
+To make this change permanent – open following config file `sudo vi /etc/sysconfig/selinux` and set SELINUX=disabled then restart httpd.
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2010.47.09.png)
+
+
+```
+sudo systemctl restart httpd
+sudo systemctl status httpd
+```
 
 
 
