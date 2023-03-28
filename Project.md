@@ -142,36 +142,94 @@ sudo systemctl restart nfs-server.service
 
 
 
+20. Next we configure NFS to interact with clients present in the same subnet.
+We can find the subnet ID and CIDR in the Networking tab of our instances
 
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2006.39.45.png)
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2006.45.17.png)
 
-
-
-
-
-
-
-
-
-
-
-
-20. Configure access to NFS for clients within the same subnet (example of Subnet CIDR – 172.31.32.0/20 ):
 ```
 sudo vi /etc/exports
- 
+
+``` 
+Edit the file like the image below:
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2007.01.43.png) 
+
+```
 /mnt/apps <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 /mnt/logs <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
 /mnt/opt <Subnet-CIDR>(rw,sync,no_all_squash,no_root_squash)
+```
  
-Esc + :wq!
+21. We will run this command to export
+`sudo exportfs -arv`
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2007.05.10.png)
+
  
-sudo exportfs -arv
-Check which port is used by NFS and open it using Security Groups (add new Inbound Rule) rpcinfo -p | grep nfs
-Alt text
+22. Check which port is used by NFS and open it using Security Groups (add new Inbound Rule) `rpcinfo -p | grep nfs`
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2007.11.33.png)
 
-Important note: In order for NFS server to be accessible from your client, you must also open following ports: TCP 111, UDP 111, UDP 2049:
+Important note: In order for NFS server to be accessible from our client, we must also open following ports: TCP 111, UDP 111, UDP 2049 and TCP 2049:
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2007.27.47.png)
 
 
+## Step 2 – Configure the Database Server
+
+1. launch an Ubuntu 20.04 server on AWS which will serve as our Database. Ensure its in the same subnet as the NFS-Server
+
+Install MySQL server
+
+```
+sudo apt update
+
+sudo apt upgrade
+
+sudo apt install mysql-server
+
+mysql --version
+
+```
+
+
+2. Create a database and name it tooling
+```
+sudo mysql 
+create database tooling;
+
+```
+Create a database user with name webaccess and grant permission to the user on tooling db to be able to do anything only from the webservers subnet cidr
+
+
+`create user 'webaccess'@'172.31.80.0/20' identified by 'password';`
+
+Grant permission to webaccess user on tooling database to do anything only from the webservers subnet cidr:
+
+`grant all privileges on tooling.* to 'webaccess'@'172.31.80.0/20';`
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2008.05.54.png)
+
+The ip address is the webserver's IPv4 CIDR. The webserver is created in the next step below.
+
+
+## Step 3 – Prepare the Web Servers
+
+1. Create a RHEL EC2 instance on AWS which serves as our web server. Also remember to have in it in same subnet.
+2. Install NFS client
+
+`sudo yum install nfs-utils nfs4-acl-tools -y`
+
+3. Mount /var/www/ and target the NFS server’s export for apps
+
+```
+sudo mkdir /var/www
+sudo mount -t nfs -o rw,nosuid <NFS-Server-Private-IP-Address>:/mnt/apps /var/www
+
+```
+4. We will verify that NFS was mounted successfully by running `df -h`. Make sure that the changes will persist on Web Server after reboot:
+![]()
 
 
 
