@@ -292,7 +292,7 @@ add the following line :
 
 Note 1: Do not forget to open TCP port 80 on the Web Server.
 
-Note 2: If you encounter 403 Error – check permissions to your /var/www/html folder and also disable SELinux sudo setenforce 0
+Note 2: If you encounter 403 Error – check permissions to your /var/www/html folder and also disable `SELinux sudo setenforce 0`
 
 To make this change permanent – open following config file `sudo vi /etc/sysconfig/selinux` and set SELINUX=disabled then restart httpd.
 
@@ -303,6 +303,49 @@ To make this change permanent – open following config file `sudo vi /etc/sysco
 sudo systemctl restart httpd
 sudo systemctl status httpd
 ```
+
+10. Update the website’s configuration to connect to the database (in /var/www/html/functions.php file).
+edit the database private ip address, database username and database name. save and quit
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2013.19.30.png)
+
+11. Install MySQL on the web servers using `sudo yum install mysql -y` then cd into the tooling directory to connect to the database.
+
+Apply tooling-db.sql script to your database using this command
+``` mysql -h <database-private-ip> -u <db-username> -p <db-pasword> tooling <tooling-db.sql ```
+
+In my case, ``` mysql -h 172.31.82.251 -u webaccess -p tooling <tooling-db.sql ```
+
+
+12. If you can't connect to it and there is an error simply move to the DB server to edit the inbound security group.
+
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2013.36.37.png)
+
+On the db server, We'd also need to configure MySQL server to allow connections from remote hosts.
+
+`sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf`
+
+we will edit the bind-address and the mysqlx-bind-address to the value in the image below.
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2013.49.22.png)
+
+afterward, run the following
+
+```
+sudo systemctl restart mysql
+
+sudo systemctl status mysql
+```
+13. Create in MySQL on the database server,  a new admin user with username value as "myuser" and password value as "password":
+
+INSERT INTO users (id, username, password, email, user_type, status) VALUES ('1', ‘myuser’, ‘password’, ‘user@mail.com’, ‘admin’, ‘1’); 
+
+like in the image below:
+![](https://github.com/Omolade11/devops-tooling-website-solution/blob/main/Images/Screenshot%202023-03-28%20at%2014.35.48.png)
+
+ 
+14. We will open the website in your browser http://Web-Server-Public-IP-Address-or-Public-DNS-Name/index.php and make sure you can login into the website with myuser user.
+
+
 
 
 
